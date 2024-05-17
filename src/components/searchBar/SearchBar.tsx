@@ -1,5 +1,7 @@
 import toast, { Toaster } from 'react-hot-toast';
 import css from './SearchBar.module.css';
+import { FC, FormEvent } from 'react';
+
 import { IoMdNotifications } from 'react-icons/io';
 const notify = () =>
   toast('Please enter search term!', {
@@ -10,13 +12,17 @@ const notify = () =>
       color: '#fff',
     },
   });
+interface SearchBarProps {
+  onQuery: React.Dispatch<React.SetStateAction<string>>;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+}
 
-const SearchBar = ({ onQuery, setPage }) => {
-  const handleSubmit = evt => {
+const SearchBar: FC<SearchBarProps> = ({ onQuery, setPage }) => {
+  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-    const form = evt.target;
-    const query = form.elements.image.value;
-    if (form.elements.image.value.trim() === '') {
+    const form = evt.currentTarget as HTMLFormElement;
+    const query = (form.elements.namedItem('image') as HTMLInputElement)?.value;
+    if (!query || query.trim() === '') {
       notify();
       return;
     }

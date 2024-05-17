@@ -8,6 +8,13 @@ import toast from 'react-hot-toast';
 import { IoMdNotifications } from 'react-icons/io';
 import LoadMoreBtn from './loadMoreBtn/LoadMoreBtn';
 import ImageModal from './imageModal/ImageModal';
+import { Image } from '../types';
+
+interface resDataProps {
+  results: Image[];
+  total: number;
+  total_pages: number;
+}
 
 const notify = () =>
   toast('Whoops, something went wrong! Please try reloading this page!', {
@@ -20,30 +27,30 @@ const notify = () =>
   });
 
 function App() {
-  const [photos, setPhotos] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [page, setPage] = useState(1);
-  const [query, setQuery] = useState('');
-  const [photoForModalWindow, setPhotoForModalWindow] = useState(null);
-  const [modalIsOpen, setIsOpen] = useState(false);
-  const [totalPages, setTotalPages] = useState(0);
+  const [photos, setPhotos] = useState<Image[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(1);
+  const [query, setQuery] = useState<string>('');
+  const [photoForModalWindow, setPhotoForModalWindow] = useState<string>('');
+  const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+  const [totalPages, setTotalPages] = useState<number>(0);
   const [showBtn, setShowBtn] = useState(false);
 
-  const addPage = () => {
+  const addPage = (): void => {
     setPage(page + 1);
   };
 
-  const openModal = () => {
+  const openModal = (): void => {
     setIsOpen(true);
   };
 
-  const closeModal = () => {
-    setPhotoForModalWindow(null);
+  const closeModal = (): void => {
+    setPhotoForModalWindow('');
     setIsOpen(false);
   };
 
-  const clickPhoto = photo => {
+  const clickPhoto = (photo: string): void => {
     setPhotoForModalWindow(photo);
     openModal();
   };
@@ -57,7 +64,10 @@ function App() {
           page === 1 && setPhotos([]);
         }
         setLoading(true);
-        const resData = await fetchPhotosWithLoadMore(query, page);
+        const resData: resDataProps = await fetchPhotosWithLoadMore(
+          query,
+          page
+        );
         setPhotos(prev => {
           return [...prev, ...resData.results];
         });
@@ -73,9 +83,10 @@ function App() {
   }, [query, page]);
 
   useEffect(() => {
-    setShowBtn(totalPages && totalPages !== page);
+    if (totalPages && totalPages !== page) {
+      setShowBtn(!!totalPages);
+    }
   }, [page, totalPages]);
-
   return (
     <div>
       <SearchBar onQuery={setQuery} setPage={setPage} />

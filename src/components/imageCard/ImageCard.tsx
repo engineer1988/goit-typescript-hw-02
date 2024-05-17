@@ -1,6 +1,19 @@
 import css from './ImageCard.module.css';
+import { FC } from 'react';
 
-const ImageCart = ({ smallUrl, alt, clickPhoto, regularUrl }) => {
+interface ImageCartProps {
+  smallUrl: string;
+  alt: string;
+  clickPhoto: (regularUrl: string) => void;
+  regularUrl: string;
+}
+
+const ImageCart: FC<ImageCartProps> = ({
+  smallUrl,
+  alt,
+  clickPhoto,
+  regularUrl,
+}) => {
   return (
     <>
       <div>

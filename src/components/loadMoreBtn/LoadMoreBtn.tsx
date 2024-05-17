@@ -1,6 +1,10 @@
 import css from './LoadMoreBtn.module.css';
+import { FC } from 'react';
 
-const LoadMoreBtn = ({ onAddPage }) => {
+interface LoadMoreBtnProp {
+  onAddPage: () => void;
+}
+const LoadMoreBtn: FC<LoadMoreBtnProp> = ({ onAddPage }) => {
   return (
     <div className={css.loadMoreBtn_div}>
       <button
